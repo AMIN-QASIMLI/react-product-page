@@ -100,8 +100,7 @@ export const Login = () => {
         alignItems="center"
         as="form"
         onSubmit={onSubmit}
-        boxShadow={"md"}
-      >
+        boxShadow={"md"}>
         <Flex>
           <MdSunny onClick={() => toggleDarkMode(false)} />
           <FaMoon onClick={() => toggleDarkMode(true)} />
@@ -112,8 +111,7 @@ export const Login = () => {
             fontSize={"32px"}
             fontFamily={"DM Serif Text"}
             fontWeight={400}
-            fontStyle={"italic"}
-          >
+            fontStyle={"italic"}>
             A ©
           </Text>
         </Flex>
@@ -123,8 +121,7 @@ export const Login = () => {
               direction={"column"}
               justifyContent="left"
               gap="24px"
-              px="24px"
-            >
+              px="24px">
               {field.map(({ label, name, placeHolder, type }) => (
                 <Flex direction="column">
                   <Text color="#555555">{label}</Text>
@@ -137,8 +134,7 @@ export const Login = () => {
                         ) : (
                           <FiEye onClick={() => setVisible(true)} />
                         )
-                      }
-                    >
+                      }>
                       <Input
                         placeholder={placeHolder}
                         borderRadius="4px"
@@ -179,9 +175,8 @@ export const Login = () => {
           minH="40px"
           fontSize="16px"
           bg="#1E2772"
-          disabled={!isValid}
-        >
-          Sign up
+          disabled={!isValid}>
+          Log in
         </Button>
       </Flex>
     </Flex>

@@ -72,7 +72,7 @@ export const InCart = () => {
         }
       }
     }
-    window.location.reload()
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -202,22 +202,22 @@ export const InCart = () => {
                   maxW={"600px"}
                   minH={"550px"}
                   transitionDuration={"700ms"}
-                  onClick={() => navigate(`/product/${inCart.id}`)}
                   _hover={{
                     padding: 12,
                   }}
                 >
-                  <Flex>
-                    <Text fontSize={"32px"}>{inCart.title}</Text>
+                  <Flex onClick={() => navigate(`/product/${inCart.id}`)}>
+                    <Flex>
+                      <Text fontSize={"32px"}>{inCart.title}</Text>
+                    </Flex>
+                    <Flex alignItems={"center"} justifyContent={"center"}>
+                      <Image src={inCart.image} />
+                    </Flex>
+                    <Flex direction={"column"} p={4} gap={4}>
+                      <Text fontSize={"24px"}>{inCart.price}₼</Text>
+                      <Text>{inCart.description}</Text>
+                    </Flex>
                   </Flex>
-                  <Flex alignItems={"center"} justifyContent={"center"}>
-                    <Image src={inCart.image} />
-                  </Flex>
-                  <Flex direction={"column"} p={4} gap={4}>
-                    <Text fontSize={"24px"}>{inCart.price}₼</Text>
-                    <Text>{inCart.description}</Text>
-                  </Flex>
-
                   <Button onClick={() => handleDeleteButton(inCart.id)}>
                     Delet it!
                   </Button>
@@ -243,20 +243,21 @@ export const InCart = () => {
                   maxW={"600px"}
                   minH={"550px"}
                   transitionDuration={"700ms"}
-                  onClick={() => navigate(`/product/${inCart.id}`)}
                   _hover={{
                     padding: 12,
                   }}
                 >
-                  <Flex>
-                    <Text fontSize={"32px"}>{inCart.title}</Text>
-                  </Flex>
-                  <Flex alignItems={"center"} justifyContent={"center"}>
-                    <Image src={inCart.image} />
-                  </Flex>
-                  <Flex direction={"column"} p={4} gap={4}>
-                    <Text fontSize={"24px"}>{inCart.price}₼</Text>
-                    <Text>{inCart.description}</Text>
+                  <Flex onClick={() => navigate(`/product/${inCart.id}`)}>
+                    <Flex>
+                      <Text fontSize={"32px"}>{inCart.title}</Text>
+                    </Flex>
+                    <Flex alignItems={"center"} justifyContent={"center"}>
+                      <Image src={inCart.image} />
+                    </Flex>
+                    <Flex direction={"column"} p={4} gap={4}>
+                      <Text fontSize={"24px"}>{inCart.price}₼</Text>
+                      <Text>{inCart.description}</Text>
+                    </Flex>
                   </Flex>
                   <Button onClick={() => handleDeleteButton(inCart.id)}>
                     Delet it!
@@ -265,7 +266,12 @@ export const InCart = () => {
               ))
           )}
         </Flex>
-        <Flex w={"100%"} justifyContent={"center"} alignItems={"center"}>
+        <Flex
+          w={"100%"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          display={data?.length > 0 ? "flex" : "none"}
+        >
           <Button onClick={() => alert("You can not buy!")}>Buy!</Button>
         </Flex>
       </main>

@@ -232,21 +232,22 @@ export const App = () => {
                 minW={"300px"}
                 maxW={"600px"}
                 minH={"550px"}
-                onClick={() => navigate(`/product/${product.id}`)}
                 transitionDuration={"700ms"}
                 _hover={{
                   padding: 12,
                 }}
               >
-                <Flex>
-                  <Text fontSize={"32px"}>{product.title}</Text>
-                </Flex>
-                <Flex alignItems={"center"} justifyContent={"center"}>
-                  <Image src={product.image} />
-                </Flex>
-                <Flex direction={"column"} p={4} gap={4}>
-                  <Text fontSize={"24px"}>{product.price}₼</Text>
-                  <Text>{product.description}</Text>
+                <Flex onClick={() => navigate(`/product/${product.id}`)}>
+                  <Flex>
+                    <Text fontSize={"32px"}>{product.title}</Text>
+                  </Flex>
+                  <Flex alignItems={"center"} justifyContent={"center"}>
+                    <Image src={product.image} />
+                  </Flex>
+                  <Flex direction={"column"} p={4} gap={4}>
+                    <Text fontSize={"24px"}>{product.price}₼</Text>
+                    <Text>{product.description}</Text>
+                  </Flex>
                 </Flex>
                 {product.isDeletable == true ? (
                   <Button onClick={() => handleDeleteButton(product.id)}>
@@ -263,29 +264,34 @@ export const App = () => {
           data?.map((product) => (
             <Flex
               direction={"column"}
-              p={4}
-              gap={4}
               backgroundColor={"#cccbcb"}
               borderRadius={"md"}
+              p={3}
               key={product.id}
-              minW={"300px"}
-              maxW={"600px"}
-              minH={"550px"}
-              onClick={() => navigate(`/product/${product.id}`)}
               transitionDuration={"700ms"}
               _hover={{
                 padding: 12,
               }}
             >
-              <Flex>
-                <Text fontSize={"32px"}>{product.title}</Text>
-              </Flex>
-              <Flex alignItems={"center"} justifyContent={"center"}>
-                <Image src={product.image} />
-              </Flex>
-              <Flex direction={"column"} p={4} gap={4}>
-                <Text fontSize={"24px"}>{product.price}₼</Text>
-                <Text>{product.description}</Text>
+              <Flex
+                direction={"column"}
+                onClick={() => navigate(`/product/${product.id}`)}
+                minW={"300px"}
+                maxW={"600px"}
+                minH={"550px"}
+                p={4}
+                gap={4}
+              >
+                <Flex>
+                  <Text fontSize={"32px"}>{product.title}</Text>
+                </Flex>
+                <Flex alignItems={"center"} justifyContent={"center"}>
+                  <Image src={product.image} />
+                </Flex>
+                <Flex direction={"column"} p={4} gap={4}>
+                  <Text fontSize={"24px"}>{product.price}₼</Text>
+                  <Text>{product.description}</Text>
+                </Flex>
               </Flex>
               {product.isDeletable === true ? (
                 <Button onClick={() => handleDeleteButton(product.id)}>

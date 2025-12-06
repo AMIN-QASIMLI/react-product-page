@@ -101,7 +101,7 @@ export const Product = () => {
   }, []);
 
   return (
-    <Flex width={"100%"} height={"100%"}>
+    <Flex width={"100%"} minHeight={"100%"}>
       <header style={{ width: "100%", position: "fixed", zIndex: "1000" }}>
         <Flex
           p={4}
@@ -179,7 +179,8 @@ export const Product = () => {
       <Flex
         wrap={"wrap"}
         width={"100%"}
-        height={"100%"}
+        minHeight={"100%"}
+        grow={1}
         p={4}
         gap={4}
         mt={"100px"}
@@ -192,14 +193,14 @@ export const Product = () => {
           data
             ?.filter((product) => product.id == productId)
             .map((product) => (
-              <Flex borderRadius={"md"} backgroundColor={"#1E90FF"} p={16}>
+              <Flex borderRadius={"md"} backgroundColor={"#1E90FF"} p={16} grow={1}>
                 <Image src={product.image} />
                 <Flex direction={"column"} gap={4} p={4}>
                   <Text fontSize={"32px"}>{product.title}</Text>
                   <Text fontSize={"24px"}>{product.price}₼</Text>
                   <Text>{product.description}</Text>
-                  {product.isDeletable === "true" ? (
-                    <Button onClick={() => handleDeleteButton(product.id)}>
+                  {product.isDeletable === true ? (
+                    <Button onClick={() => handleDeleteButton(product.id!)}>
                       Delete!
                     </Button>
                   ) : (

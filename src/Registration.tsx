@@ -30,12 +30,14 @@ const fields: Fields[][] = [
       name: "firstName",
       label: "First Name",
       placeHolder: "Enter your name..",
+      id:0,
     },
     {
       type: "text",
       name: "lastName",
       label: "Last Name",
       placeHolder: "Enter your last name..",
+      id: 1,
     },
   ],
   [
@@ -44,12 +46,14 @@ const fields: Fields[][] = [
       name: "email",
       label: "Email Id",
       placeHolder: "Enter your email..",
+      id: 2,
     },
     {
       type: "text",
       name: "mobile",
       label: "Mobile No",
       placeHolder: "Enter your number..",
+      id: 3,
     },
   ],
   [
@@ -58,12 +62,14 @@ const fields: Fields[][] = [
       name: "password",
       label: "Password",
       placeHolder: "Enter your password..",
+      id: 4,
     },
     {
       type: "text",
       name: "companyName",
       label: "Company name",
       placeHolder: "Enter your company name..",
+      id: 5,
     },
   ],
 ];
@@ -73,6 +79,7 @@ interface Fields {
   placeHolder: string;
   label: string;
   name: keyof FormValues;
+  id: number,
 }
 
 interface FormValues {
@@ -88,7 +95,7 @@ const schema = object({
   firstName: string().required("Salam"),
   lastName: string().required(),
   email: string().email().required(),
-  mobile: string().required(),
+  mobile: string().matches(/^[0-9]+$/).max(15).required(),
   companyName: string().required(),
   password: string().required("Password is required"),
 });
@@ -163,15 +170,16 @@ export const Registration = () => {
           </Text>
         </Flex>
         <Flex flexWrap="wrap" mt="60px" justifyContent="center" gap="24px">
-          {fields.map((field) => (
+          {fields.map((field, i) => (
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent="left"
               gap="24px"
               px="24px"
+              key={i}
             >
-              {field.map(({ label, name, placeHolder, type }) => (
-                <Flex direction="column">
+              {field.map(({ label, name, placeHolder, type, id }) => (
+                <Flex direction="column" key={id}>
                   <Text color="#555555">{label}</Text>
 
                   {name === "password" ? (

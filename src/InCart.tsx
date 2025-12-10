@@ -7,6 +7,8 @@ import Logo from "./assets/logo.svg";
 import { useNavigate, useSearchParams } from "react-router";
 import { useRef, useEffect, useState } from "react";
 import { useGetInCartsQuery, useRemoveFromCartMutation } from "./api";
+import { RadioCard } from "./components/ui/RadioCard";
+import { currs } from "./zustand_store";
 
 export const InCart = () => {
   const { data, isFetching } = useGetInCartsQuery();
@@ -18,6 +20,7 @@ export const InCart = () => {
   const descriptionInputRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchElement, setSearchElement] = useState("");
+  const [selected, setSelected] = useState(currs[0]);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -52,7 +55,8 @@ export const InCart = () => {
       imgInputRef.current &&
       descriptionInputRef.current &&
       titleInputRef.current &&
-      priceInputRef.current
+      priceInputRef.current &&
+      selected
     ) {
       const file = imgInputRef.current.files?.[0];
       if (file) {
@@ -62,6 +66,7 @@ export const InCart = () => {
         formData.append("description", descriptionInputRef.current.value);
         formData.append("image", file);
         formData.append("isDeletable", "true");
+        formData.append("curr", selected);
 
         try {
           await axios.post("http://localhost:3001/products", formData, {
@@ -158,6 +163,39 @@ export const InCart = () => {
             ></Input>
           </Flex>
           <Flex gap={2} flexDirection={"column"}>
+            <Text>Add a Currency :</Text>
+            <Flex gap={4}>
+              <RadioCard
+                value={currs[0]}
+                isChecked={selected === currs[0]}
+                onChange={setSelected}
+              >
+                {currs[0]}
+              </RadioCard>
+              <RadioCard
+                value={currs[1]}
+                isChecked={selected === currs[1]}
+                onChange={setSelected}
+              >
+                {currs[1]}
+              </RadioCard>
+              <RadioCard
+                value={currs[2]}
+                isChecked={selected === currs[2]}
+                onChange={setSelected}
+              >
+                {currs[2]}
+              </RadioCard>
+              <RadioCard
+                value={currs[3]}
+                isChecked={selected === currs[3]}
+                onChange={setSelected}
+              >
+                {currs[3]}
+              </RadioCard>
+            </Flex>
+          </Flex>
+          <Flex gap={2} flexDirection={"column"}>
             <Text>Please write a description :</Text>
             <Input
               placeholder="Please write a description..."
@@ -177,6 +215,7 @@ export const InCart = () => {
           p={4}
           gap={4}
           mt={"100px"}
+          className={"cards"}
           alignItems={"center"}
           justifyContent={"center"}
         >
@@ -198,6 +237,8 @@ export const InCart = () => {
                   backgroundColor={"#cccbcb"}
                   borderRadius={"md"}
                   key={inCart.id}
+                  overflow={"auto"}
+                  className={"card"}
                   minW={"300px"}
                   maxW={"600px"}
                   minH={"550px"}
@@ -206,16 +247,22 @@ export const InCart = () => {
                     padding: 12,
                   }}
                 >
-                  <Flex onClick={() => navigate(`/product/${inCart.id}`)}>
-                    <Flex>
+                  <Flex
+                    overflow={"auto"}
+                    onClick={() => navigate(`/product/${inCart.id}`)}
+                  >
+                    <Flex overflow={"auto"}>
                       <Text fontSize={"32px"}>{inCart.title}</Text>
                     </Flex>
                     <Flex alignItems={"center"} justifyContent={"center"}>
                       <Image src={inCart.image} />
                     </Flex>
-                    <Flex direction={"column"} p={4} gap={4}>
-                      <Text fontSize={"24px"}>{inCart.price}₼</Text>
-                      <Text>{inCart.description}</Text>
+                    <Flex overflow={"auto"} direction={"column"} p={4} gap={4}>
+                      <Text fontSize={"24px"}>
+                        {product.price}
+                        {product.curr}
+                      </Text>
+                      <Text overflow={"auto"}>{inCart.description}</Text>
                     </Flex>
                   </Flex>
                   <Button onClick={() => handleDeleteButton(inCart.id)}>

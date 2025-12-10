@@ -11,6 +11,22 @@ body.dark-mode header {
   background-color: #7e7d7d;
 }
 
+.cards {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)) !important; 
+  gap: 20px !important;
+}
+
+.card {
+  height: 300px !important;
+  background: #f2f2f2 !important;
+  display: flex !important;
+  overflow: auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
 body.dark-mode input,
 body.dark-mode button {
   background: #232323;

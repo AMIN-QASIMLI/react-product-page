@@ -1,6 +1,6 @@
 import { Flex, Image, Text, Input, Button, Loader } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useRef} from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaMoon, FaPlus, FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { MdSunny } from "react-icons/md";
 import {
@@ -11,6 +11,8 @@ import {
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import Logo from "./assets/logo.svg";
 import { useNavigate } from "react-router";
+import { RadioCard } from "./components/ui/RadioCard";
+import { currs } from "./zustand_store";
 
 export const Product = () => {
   const { data, isFetching } = useGetProductsQuery(undefined, {
@@ -23,6 +25,7 @@ export const Product = () => {
   const imgInputRef = useRef<HTMLInputElement>(null);
   const priceInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLInputElement>(null);
+  const [selected, setSelected] = useState(currs[0]);
   const navigate = useNavigate();
   const productId = window.location.toString().split("/").pop();
 
@@ -47,7 +50,8 @@ export const Product = () => {
       imgInputRef.current &&
       descriptionInputRef.current &&
       titleInputRef.current &&
-      priceInputRef.current
+      priceInputRef.current &&
+      selected
     ) {
       const file = imgInputRef.current.files?.[0];
       if (file) {
@@ -57,6 +61,7 @@ export const Product = () => {
         formData.append("description", descriptionInputRef.current.value);
         formData.append("image", file);
         formData.append("isDeletable", "true");
+        formData.append("curr", selected);
 
         try {
           await axios.post("http://localhost:3001/products", formData, {
@@ -165,6 +170,39 @@ export const Product = () => {
             ></Input>
           </Flex>
           <Flex gap={2} flexDirection={"column"}>
+            <Text>Add a Currency :</Text>
+            <Flex gap={4}>
+              <RadioCard
+                value={currs[0]}
+                isChecked={selected === currs[0]}
+                onChange={setSelected}
+              >
+                {currs[0]}
+              </RadioCard>
+              <RadioCard
+                value={currs[1]}
+                isChecked={selected === currs[1]}
+                onChange={setSelected}
+              >
+                {currs[1]}
+              </RadioCard>
+              <RadioCard
+                value={currs[2]}
+                isChecked={selected === currs[2]}
+                onChange={setSelected}
+              >
+                {currs[2]}
+              </RadioCard>
+              <RadioCard
+                value={currs[3]}
+                isChecked={selected === currs[3]}
+                onChange={setSelected}
+              >
+                {currs[3]}
+              </RadioCard>
+            </Flex>
+          </Flex>
+          <Flex gap={2} flexDirection={"column"}>
             <Text>Please write a description :</Text>
             <Input
               placeholder="Please write a description..."
@@ -192,12 +230,21 @@ export const Product = () => {
         ) : (
           data
             ?.filter((product) => product.id == productId)
-            .map((product) => (
-              <Flex borderRadius={"md"} backgroundColor={"#1E90FF"} p={16} grow={1}>
+            .map((product, i) => (
+              <Flex
+                borderRadius={"md"}
+                backgroundColor={"#1E90FF"}
+                p={16}
+                grow={1}
+                key={i}
+              >
                 <Image src={product.image} />
                 <Flex direction={"column"} gap={4} p={4}>
                   <Text fontSize={"32px"}>{product.title}</Text>
-                  <Text fontSize={"24px"}>{product.price}₼</Text>
+                  <Text fontSize={"24px"}>
+                    {product.price}
+                    {product.curr}
+                  </Text>
                   <Text>{product.description}</Text>
                   {product.isDeletable === true ? (
                     <Button onClick={() => handleDeleteButton(product.id!)}>

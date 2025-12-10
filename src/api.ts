@@ -8,6 +8,7 @@ export interface Product {
   description?: string;
   image?: string;
   isDeletable?: boolean;
+  curr: string;
 }
 
 export interface User {

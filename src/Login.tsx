@@ -1,4 +1,4 @@
-import { Button, Flex, Input, InputGroup, Text, Image } from "@chakra-ui/react";
+import { Button, Flex, Input, InputGroup, Text, Image, HStack, Separator } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState, useEffect } from "react";
@@ -8,7 +8,7 @@ import { FaMoon } from "react-icons/fa";
 import { MdSunny } from "react-icons/md";
 import Logo from "./assets/Logo.svg";
 import { useAuthStore } from "./zustand_store";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const fields: Fields[][] = [
@@ -100,7 +100,8 @@ export const Login = () => {
         alignItems="center"
         as="form"
         onSubmit={onSubmit}
-        boxShadow={"md"}>
+        boxShadow={"md"}
+      >
         <Flex>
           <MdSunny onClick={() => toggleDarkMode(false)} />
           <FaMoon onClick={() => toggleDarkMode(true)} />
@@ -111,7 +112,8 @@ export const Login = () => {
             fontSize={"32px"}
             fontFamily={"DM Serif Text"}
             fontWeight={400}
-            fontStyle={"italic"}>
+            fontStyle={"italic"}
+          >
             A ©
           </Text>
         </Flex>
@@ -121,7 +123,8 @@ export const Login = () => {
               direction={"column"}
               justifyContent="left"
               gap="24px"
-              px="24px">
+              px="24px"
+            >
               {field.map(({ label, name, placeHolder, type }) => (
                 <Flex direction="column">
                   <Text color="#555555">{label}</Text>
@@ -134,7 +137,8 @@ export const Login = () => {
                         ) : (
                           <FiEye onClick={() => setVisible(true)} />
                         )
-                      }>
+                      }
+                    >
                       <Input
                         placeholder={placeHolder}
                         borderRadius="4px"
@@ -175,9 +179,17 @@ export const Login = () => {
           minH="40px"
           fontSize="16px"
           bg="#1E2772"
-          disabled={!isValid}>
+          disabled={!isValid}
+        >
           Log in
         </Button>
+        <HStack w="100%" mt="24px">
+          <Separator flex="1" />
+          <Text borderBottom="1px solid" flexShrink="0" color="#555555">
+            <Link to="/register">You haven't an account yet?!</Link>
+          </Text>
+          <Separator flex="1" />
+        </HStack>
       </Flex>
     </Flex>
   );

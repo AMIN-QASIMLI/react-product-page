@@ -13,6 +13,8 @@ import Logo from "./assets/logo.svg";
 import { useSearchParams } from "react-router";
 import { useNavigate } from "react-router";
 import { FaUserCircle } from "react-icons/fa";
+import { currs } from "./zustand_store";
+import { RadioCard } from "./components/ui/RadioCard";
 
 export const App = () => {
   const { data, isFetching } = useGetProductsQuery(undefined, {
@@ -27,6 +29,7 @@ export const App = () => {
   const descriptionInputRef = useRef<HTMLInputElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchElement, setSearchElement] = useState("");
+  const [selected, setSelected] = useState(currs[0]);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -57,7 +60,8 @@ export const App = () => {
       imgInputRef.current &&
       descriptionInputRef.current &&
       titleInputRef.current &&
-      priceInputRef.current
+      priceInputRef.current &&
+      selected
     ) {
       const file = imgInputRef.current.files?.[0];
       if (file) {
@@ -67,6 +71,7 @@ export const App = () => {
         formData.append("description", descriptionInputRef.current.value);
         formData.append("image", file);
         formData.append("isDeletable", "true");
+        formData.append("curr", selected);
         try {
           await axios.post("http://localhost:3001/products", formData, {
             headers: { "Content-Type": "multipart/form-data" },
@@ -84,6 +89,7 @@ export const App = () => {
     description?: string;
     image?: string;
     isDeletable?: boolean;
+    curr: string;
   }
 
   const handleAddToCartButtonClicked = async (product: Product) => {
@@ -93,6 +99,7 @@ export const App = () => {
         image: product.image,
         price: product.price,
         description: product.description,
+        curr: product.curr,
       });
     } catch (err) {
       console.error("Add product error:", err);
@@ -110,7 +117,7 @@ export const App = () => {
   }, []);
 
   return (
-    <Flex width={"100%"} height={"100%"}>
+    <Flex width={"100vw"} height={"100vh"} flexDirection={"column"}>
       <header style={{ width: "100%", position: "fixed", zIndex: "1000" }}>
         <Flex
           p={4}
@@ -190,6 +197,39 @@ export const App = () => {
             ></Input>
           </Flex>
           <Flex gap={2} flexDirection={"column"}>
+            <Text>Add a Currency :</Text>
+            <Flex gap={4}>
+              <RadioCard
+                value={currs[0]}
+                isChecked={selected === currs[0]}
+                onChange={setSelected}
+              >
+                {currs[0]}
+              </RadioCard>
+              <RadioCard
+                value={currs[1]}
+                isChecked={selected === currs[1]}
+                onChange={setSelected}
+              >
+                {currs[1]}
+              </RadioCard>
+              <RadioCard
+                value={currs[2]}
+                isChecked={selected === currs[2]}
+                onChange={setSelected}
+              >
+                {currs[2]}
+              </RadioCard>
+              <RadioCard
+                value={currs[3]}
+                isChecked={selected === currs[3]}
+                onChange={setSelected}
+              >
+                {currs[3]}
+              </RadioCard>
+            </Flex>
+          </Flex>
+          <Flex gap={2} flexDirection={"column"}>
             <Text>Please write a description :</Text>
             <Input
               placeholder="Please write a description..."
@@ -204,11 +244,12 @@ export const App = () => {
       <Flex
         wrap={"wrap"}
         width={"100%"}
-        height={"100%"}
+        flex={1}
+        overflow={"auto"}
         p={4}
         gap={4}
-        mt={"100px"}
-        alignItems={"center"}
+        alignItems={"flex-start"}
+        className={"cards"}
         justifyContent={"center"}
       >
         {isFetching ? (
@@ -224,33 +265,60 @@ export const App = () => {
             .map((product) => (
               <Flex
                 direction={"column"}
-                p={4}
-                gap={4}
+                gap={2}
+                overflow={"hidden"}
+                className={"card"}
                 backgroundColor={"#cccbcb"}
                 borderRadius={"md"}
                 key={product.id}
                 minW={"300px"}
                 maxW={"600px"}
-                minH={"550px"}
+                h={"300px"}
                 transitionDuration={"700ms"}
                 _hover={{
                   padding: 12,
                 }}
               >
-                <Flex onClick={() => navigate(`/product/${product.id}`)}>
-                  <Flex>
+                <Flex
+                  direction={"column"}
+                  width={"100%"}
+                  flex={1}
+                  overflow={"hidden"}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  p={4}
+                >
+                  <Flex maxH={"50px"} overflow={"hidden"}>
                     <Text fontSize={"32px"}>{product.title}</Text>
                   </Flex>
-                  <Flex alignItems={"center"} justifyContent={"center"}>
-                    <Image src={product.image} />
+                  <Flex
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                    flex={1}
+                    maxH={"80px"}
+                    overflow={"hidden"}
+                  >
+                    <Image src={product.image} maxH={"100%"} />
                   </Flex>
-                  <Flex direction={"column"} p={4} gap={4}>
-                    <Text fontSize={"24px"}>{product.price}₼</Text>
-                    <Text>{product.description}</Text>
+                  <Flex
+                    direction="column"
+                    gap={2}
+                    pr={2}
+                    maxH={"100px"}
+                    overflowY={"auto"}
+                    border={"1px solid rgba(0,0,0,0.04)"}
+                    bg={"transparent"}
+                  >
+                    <Text fontSize="24px">
+                      {product.price}
+                      {product.curr}
+                    </Text>
+                    <Text fontSize="sm" whiteSpace={"normal"}>
+                      {product.description}
+                    </Text>
                   </Flex>
                 </Flex>
                 {product.isDeletable == true ? (
-                  <Button onClick={() => handleDeleteButton(product.id)}>
+                  <Button onClick={() => handleDeleteButton(product.id!)}>
                     Delet it!
                   </Button>
                 ) : (
@@ -289,12 +357,12 @@ export const App = () => {
                   <Image src={product.image} />
                 </Flex>
                 <Flex direction={"column"} p={4} gap={4}>
-                  <Text fontSize={"24px"}>{product.price}₼</Text>
+                  <Text fontSize={"24px"}>{product.price}{product.curr}</Text>
                   <Text>{product.description}</Text>
                 </Flex>
               </Flex>
               {product.isDeletable === true ? (
-                <Button onClick={() => handleDeleteButton(product.id)}>
+                <Button onClick={() => handleDeleteButton(product.id!)}>
                   Delet it!
                 </Button>
               ) : (

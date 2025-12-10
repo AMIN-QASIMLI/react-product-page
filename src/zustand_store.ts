@@ -6,6 +6,8 @@ interface AuthState {
   logout: () => void;
 }
 
+export const currs: string[] = ["₼", "$", "₽", "₺"]
+
 export const useAuthStore = create<AuthState>((set) => ({
   token: localStorage.getItem("token"),
   login: (token) => {

@@ -1,7 +1,14 @@
 import React, { useEffect } from "react";
-import { Flex, Text, Button, Spinner, IconButton, Image } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  Button,
+  Spinner,
+  IconButton,
+  Image,
+} from "@chakra-ui/react";
 import Logo from "./assets/logo.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { MdSunny } from "react-icons/md";
 import { FaMoon } from "react-icons/fa";
 import { useGetProfileQuery } from "./api";
@@ -10,7 +17,7 @@ import { useAuthStore } from "./zustand_store";
 export const UserInformations: React.FC = () => {
   const { data, isFetching, isError, error } = useGetProfileQuery();
   const logout = useAuthStore((s) => s.logout);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
@@ -67,11 +74,18 @@ export const UserInformations: React.FC = () => {
       {isFetching ? (
         <Spinner size="lg" />
       ) : isError ? (
-        <Flex direction="column" align="center" gap={2}>
+        <Flex direction="column" gap={2}>
           <Text color="red.500">Error loading profile.</Text>
           <Text fontSize="sm">
             {JSON.stringify((error as any)?.data ?? error)}
           </Text>
+          <Text>No profile data.</Text>
+          <Button>
+            <Link to={"/login"}>Log in</Link>
+          </Button>
+          <Button>
+            <Link to="/register">You haven't an account yet?!</Link>
+          </Button>
         </Flex>
       ) : user ? (
         <Flex
@@ -88,7 +102,15 @@ export const UserInformations: React.FC = () => {
           <Text>User Mobile: {user.mobile ?? "—"}</Text>
         </Flex>
       ) : (
-        <Text>No profile data.</Text>
+        <Flex direction={"column"} gap={"4px"}>
+          <Text>No profile data.</Text>
+          <Button>
+            <Link to={"/login"}>Log in</Link>
+          </Button>
+          <Button>
+            <Link to="/register">You haven't an account yet?!</Link>
+          </Button>
+        </Flex>
       )}
       <Button onClick={handleLogout} maxW={"300px"}>
         Log out

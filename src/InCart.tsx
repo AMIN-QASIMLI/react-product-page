@@ -33,7 +33,7 @@ export const InCart = () => {
   };
 
   useClickAway(() => {
-      sellMenuRef.current!.style.display = "none";
+    sellMenuRef.current!.style.display = "none";
   }, headerRef);
 
   const toggleDarkMode = (darkMode: boolean) => {
@@ -92,7 +92,10 @@ export const InCart = () => {
   }, []);
   return (
     <Flex>
-      <header style={{ width: "100%", position: "fixed", zIndex: "1000" }} ref={headerRef}>
+      <header
+        style={{ width: "100%", position: "fixed", zIndex: "1000" }}
+        ref={headerRef}
+      >
         <Flex
           p={4}
           alignItems={"center"}
@@ -171,8 +174,9 @@ export const InCart = () => {
           <Flex gap={2} flexDirection={"column"}>
             <Text>Add a Currency :</Text>
             <Flex gap={4} p={2} maxW={"100vw"} overflowX={"auto"}>
-              {currs.map((c) => (
+              {currs.map((c, i) => (
                 <RadioCard
+                  key={i}
                   value={c}
                   isChecked={selected === c}
                   onChange={setSelected}

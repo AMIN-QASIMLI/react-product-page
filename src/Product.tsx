@@ -181,8 +181,9 @@ export const Product = () => {
           <Flex gap={2} flexDirection={"column"}>
             <Text>Add a Currency :</Text>
             <Flex gap={4} p={2} maxW={"100vw"} overflowX={"auto"}>
-              {currs.map((c) => (
+              {currs.map((c, i) => (
                 <RadioCard
+                  key={i}
                   value={c}
                   isChecked={selected === c}
                   onChange={setSelected}

@@ -23,7 +23,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Ensure uploads directory exists
 const fs = require("fs");
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {

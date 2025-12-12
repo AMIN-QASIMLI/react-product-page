@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import { FaUserCircle } from "react-icons/fa";
 import { currs } from "./zustand_store";
 import { RadioCard } from "./components/ui/RadioCard";
+import { useClickAway } from "ahooks";
 
 export const App = () => {
   const { data, isFetching } = useGetProductsQuery(undefined, {
@@ -23,6 +24,7 @@ export const App = () => {
   const [deleteProduct] = useDeleteProductMutation();
   const [addToCart] = useAddToCartMutation();
   const sellMenuRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const imgInputRef = useRef<HTMLInputElement>(null);
   const priceInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +40,10 @@ export const App = () => {
     event.preventDefault();
     setSearchParams({ q: searchQuery });
   };
+
+  useClickAway(() => {
+    sellMenuRef.current!.style.display = "none";
+  }, headerRef);
 
   const handleSellMenuOpener = () => {
     if (sellMenuRef.current!.style.display === "none") {
@@ -118,7 +124,10 @@ export const App = () => {
 
   return (
     <Flex width={"100vw"} height={"100vh"} flexDirection={"column"}>
-      <header style={{ width: "100%", position: "fixed", zIndex: "1000" }}>
+      <header
+        style={{ width: "100%", position: "fixed", zIndex: "1000" }}
+        ref={headerRef}
+      >
         <Flex
           p={4}
           gap={4}
@@ -198,35 +207,16 @@ export const App = () => {
           </Flex>
           <Flex gap={2} flexDirection={"column"}>
             <Text>Add a Currency :</Text>
-            <Flex gap={4}>
-              <RadioCard
-                value={currs[0]}
-                isChecked={selected === currs[0]}
-                onChange={setSelected}
-              >
-                {currs[0]}
-              </RadioCard>
-              <RadioCard
-                value={currs[1]}
-                isChecked={selected === currs[1]}
-                onChange={setSelected}
-              >
-                {currs[1]}
-              </RadioCard>
-              <RadioCard
-                value={currs[2]}
-                isChecked={selected === currs[2]}
-                onChange={setSelected}
-              >
-                {currs[2]}
-              </RadioCard>
-              <RadioCard
-                value={currs[3]}
-                isChecked={selected === currs[3]}
-                onChange={setSelected}
-              >
-                {currs[3]}
-              </RadioCard>
+            <Flex gap={4} p={2} maxW={"100vw"} overflowX={"auto"}>
+              {currs.map((c) => (
+                <RadioCard
+                  value={c}
+                  isChecked={selected === c}
+                  onChange={setSelected}
+                >
+                  {c}
+                </RadioCard>
+              ))}
             </Flex>
           </Flex>
           <Flex gap={2} flexDirection={"column"}>
@@ -247,6 +237,7 @@ export const App = () => {
         flex={1}
         overflow={"auto"}
         p={4}
+        mt={"60px"}
         gap={4}
         alignItems={"flex-start"}
         className={"cards"}
@@ -357,7 +348,10 @@ export const App = () => {
                   <Image src={product.image} />
                 </Flex>
                 <Flex direction={"column"} p={4} gap={4}>
-                  <Text fontSize={"24px"}>{product.price}{product.curr}</Text>
+                  <Text fontSize={"24px"}>
+                    {product.price}
+                    {product.curr}
+                  </Text>
                   <Text>{product.description}</Text>
                 </Flex>
               </Flex>

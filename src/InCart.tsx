@@ -250,13 +250,13 @@ export const InCart = () => {
                     </Flex>
                     <Flex overflow={"auto"} direction={"column"} p={4} gap={4}>
                       <Text fontSize={"24px"}>
-                        {product.price}
-                        {product.curr}
+                        {inCart.price}
+                        {inCart.curr}
                       </Text>
                       <Text overflow={"auto"}>{inCart.description}</Text>
                     </Flex>
                   </Flex>
-                  <Button onClick={() => handleDeleteButton(inCart.id)}>
+                  <Button onClick={() => handleDeleteButton(inCart.id!)}>
                     Delet it!
                   </Button>
                 </Flex>

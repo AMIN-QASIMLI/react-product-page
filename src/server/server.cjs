@@ -24,6 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const fs = require("fs");
+const { start } = require("repl");
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -40,6 +41,16 @@ let products = [
     image: "http://localhost:3001/uploads/1755286990636-489792391.jpg",
     isDeletable: false,
     curr: "₼",
+    msgs: [
+      {
+        first_name: "Jhon",
+        last_name: "Jhonson",
+        email: "jhon1976@hotmail.com",
+        description: "He is the best enginer in the world probably, I think!",
+        companyName: "Ebay",
+        stars: [1, 1, 1, 1, 1],
+      },
+    ],
   },
   {
     id: 2,
@@ -49,6 +60,7 @@ let products = [
     image: "http://localhost:3001/uploads/1755287014629-108896857.jpg",
     isDeletable: false,
     curr: "₼",
+    msgs: [],
   },
   {
     id: 3,
@@ -58,15 +70,34 @@ let products = [
     image: "http://localhost:3001/uploads/1755287054074-156278289.jpg",
     isDeletable: false,
     curr: "₼",
+    msgs: [],
   },
   {
     id: 4,
     title: "ZotagGaming RTX 5090",
     price: 5000,
-    description: "The best graphiccard in the world!",
+    description: "The best graphic card in the world!",
     image: "http://localhost:3001/uploads/1755287082527-668644023.jpg",
     isDeletable: false,
     curr: "₼",
+    msgs: [
+      {
+        first_name: "Vasif",
+        last_name: "Qurbanov",
+        email: "pulluogul@gmail.com",
+        description: "CS2 400fps+ verir.👍🎮",
+        companyName: "Atamali Holding",
+        stars: [1, 1, 1, 1, 0],
+      },
+      {
+        first_name: "Gulmemmed",
+        last_name: "Almemmedli",
+        email: "yaxshioglan1111@gmail.com",
+        description: "Kash pulum olardi alardim...😥",
+        companyName: "fehleyem",
+        stars: [1, 1, 1, 1, 1],
+      },
+    ],
   },
 ];
 let nextProductId = 5;
@@ -76,7 +107,7 @@ app.get("/products", (req, res) => {
 });
 
 app.post("/products", upload.single("image"), (req, res) => {
-  const { title, price, description, isDeletable, curr } = req.body;
+  const { title, price, description, isDeletable, curr, msgs } = req.body;
   if (!title || price === undefined)
     return res.status(400).json({ error: "Invalid data" });
 
@@ -101,6 +132,7 @@ app.post("/products", upload.single("image"), (req, res) => {
         ? false
         : true,
     curr: curr,
+    msgs: msgs || [],
   };
 
   products.push(newProduct);
@@ -112,10 +144,22 @@ app.put("/products/:id", upload.single("image"), (req, res) => {
   const index = products.findIndex((p) => p.id === id);
   if (index === -1) return res.status(404).json({ error: "Product not found" });
 
-  const { title, price, description, isDeletable, curr } = req.body;
+  const { title, price, description, isDeletable, curr, msgs } = req.body;
   if (!title || price === undefined)
     return res.status(400).json({ error: "Invalid data" });
 
+
+    let parsedMsgs = products[index].msgs;
+
+  if (typeof msgs === "string") {
+    try {
+      parsedMsgs = JSON.parse(msgs);
+    } catch (e) {
+      return res.status(400).json({ error: "Invalid msgs format" });
+    }
+  } else if (Array.isArray(msgs)) {
+    parse
+  }
   const parsedPrice = Number(price);
   if (Number.isNaN(parsedPrice))
     return res.status(400).json({ error: "Price must be a number" });
@@ -123,23 +167,28 @@ app.put("/products/:id", upload.single("image"), (req, res) => {
   const imageUrl = req.file
     ? `http://localhost:${PORT}/uploads/${req.file.filename}`
     : products[index].image;
+  
+  if (Array.isArray(req.body.msgs)) {
+    req.body.msgs = req.body.msgs.map((m) => ({
+      ...m,
+      stars: Array.isArray(m.stars) ? m.stars.map(Number) : [],
+    }));
+  }
+
 
   products[index] = {
-    ...products[index],
-    title,
-    price: parsedPrice,
-    description: description || "",
-    image: imageUrl,
-    curr: curr,
-    isDeletable:
-      isDeletable === undefined
-        ? products[index].isDeletable
-        : isDeletable === "true" || isDeletable === true
-        ? true
-        : isDeletable === "false" || isDeletable === false
-        ? false
-        : products[index].isDeletable,
-  };
+  ...products[index],
+  title,
+  price: parsedPrice,
+  description: description || "",
+  image: imageUrl,
+  curr,
+  isDeletable:
+    isDeletable === undefined
+      ? products[index].isDeletable
+      : isDeletable === "true" || isDeletable === true,
+  msgs: parsedMsgs,
+};
 
   res.json(products[index]);
 });
@@ -163,7 +212,7 @@ app.get("/inCarts", (req, res) => {
 });
 
 app.post("/inCarts", (req, res) => {
-  const { title, price, description, image } = req.body;
+  const { title, price, description, image, curr, msgs } = req.body;
   if (!title || price === undefined)
     return res.status(400).json({ error: "Title and Price is required" });
 
@@ -177,9 +226,41 @@ app.post("/inCarts", (req, res) => {
     price: parsedPrice,
     description: description || "",
     image: image || "",
+    curr: curr,
+    msgs: [],
   };
   inCarts.push(newItem);
   res.status(201).json(newItem);
+});
+
+app.put("/inCarts/:id", upload.single("image"), (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const index = inCarts.findIndex((p) => p.id === id);
+  if (index === -1) return res.status(404).json({ error: "Product not found" });
+
+  const { title, price, description, msgs, curr } = req.body;
+  if (!title || price === undefined)
+    return res.status(400).json({ error: "Invalid data" });
+
+  const parsedPrice = Number(price);
+  if (Number.isNaN(parsedPrice))
+    return res.status(400).json({ error: "Price must be a number" });
+
+  const imageUrl = req.file
+    ? `http://localhost:${PORT}/uploads/${req.file.filename}`
+    : inCarts[index].image;
+
+  inCarts[index] = {
+    ...inCarts[index],
+    title,
+    price: parsedPrice,
+    description: description || "",
+    image: imageUrl,
+    curr: curr,
+    msgs: msgs || [],
+  };
+
+  res.json(inCarts[index]);
 });
 
 app.delete("/inCarts/:id", (req, res) => {

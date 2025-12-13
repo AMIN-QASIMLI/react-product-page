@@ -34,7 +34,7 @@ export const UserInformations: React.FC = () => {
     document.body.classList.toggle("dark-mode", darkMode);
   }, []);
 
-  const user = (data as any)?.user;
+  const user = data?.user;
   const maskedPassword = user?.password !== "" ? "••••••••" : "—";
 
   return (
@@ -77,7 +77,7 @@ export const UserInformations: React.FC = () => {
         <Flex direction="column" gap={2}>
           <Text color="red.500">Error loading profile.</Text>
           <Text fontSize="sm">
-            {JSON.stringify((error as any)?.data ?? error)}
+            {JSON.stringify((error as any).data ?? error)}
           </Text>
           <Text>No profile data.</Text>
           <Button>
@@ -105,7 +105,7 @@ export const UserInformations: React.FC = () => {
         <Flex direction={"column"} gap={"4px"}>
           <Text>No profile data.</Text>
           <Button>
-            <Link to={"/login"}>Log in</Link>
+            <Link to="/login">Log in</Link>
           </Button>
           <Button>
             <Link to="/register">You haven't an account yet?!</Link>

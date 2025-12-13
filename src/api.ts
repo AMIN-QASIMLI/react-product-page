@@ -1,6 +1,15 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQueryUser } from "./axiosInstance";
 
+export interface Msg {
+  first_name: string;
+  last_name: string;
+  email: string;
+  description: string;
+  companyName: string;
+  stars: number[];
+}
+
 export interface Product {
   id?: number;
   title: string;
@@ -9,6 +18,7 @@ export interface Product {
   image?: string;
   isDeletable?: boolean;
   curr: string;
+  msgs: Msg[];
 }
 
 export interface User {
@@ -63,12 +73,12 @@ export const api = createApi({
         data,
         headers: { "Content-Type": "multipart/form-data" },
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Product", id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Product", id }],
     }),
 
     deleteProduct: builder.mutation<void, number>({
       query: (id) => ({ url: `/products/${id}`, method: "delete" }),
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_result, _error, id) => [
         { type: "Product", id },
         { type: "Product", id: "LIST" },
       ],
@@ -92,7 +102,7 @@ export const api = createApi({
 
     removeFromCart: builder.mutation<void, number>({
       query: (id) => ({ url: `/inCarts/${id}`, method: "delete" }),
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_result, _error, id) => [
         { type: "Product", id },
         { type: "Product", id: "LIST" },
       ],
@@ -122,15 +132,17 @@ export const api = createApi({
 
     deleteUser: builder.mutation<void, number>({
       query: (id) => ({ url: `/users/${id}`, method: "delete" }),
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_result, _error, id) => [
         { type: "User", id },
         { type: "User", id: "LIST" },
       ],
     }),
 
-    login: builder.mutation<LoginResponse, { email: string; password: string }>({
-      query: (creds) => ({ url: "/login", method: "post", data: creds }),
-    }),
+    login: builder.mutation<LoginResponse, { email: string; password: string }>(
+      {
+        query: (creds) => ({ url: "/login", method: "post", data: creds }),
+      }
+    ),
   }),
 });
 

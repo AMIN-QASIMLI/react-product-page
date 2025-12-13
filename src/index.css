@@ -3,6 +3,11 @@ body.dark-mode {
   color: #3a3a3a;
 }
 
+body {
+  background-color: #7e7d7d;
+  color: #0e0d0d;
+}
+
 header {
   background-color: #cccbcb;
 }

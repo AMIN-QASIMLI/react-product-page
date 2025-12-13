@@ -118,15 +118,16 @@ export const Login = () => {
           </Text>
         </Flex>
         <Flex flexWrap="wrap" mt="60px" justifyContent="center" gap="24px">
-          {fields.map((field) => (
+          {fields.map((field, i) => (
             <Flex
+              key={i}
               direction={"column"}
               justifyContent="left"
               gap="24px"
               px="24px"
             >
               {field.map(({ label, name, placeHolder, type }) => (
-                <Flex direction="column">
+                <Flex direction="column" key={name}>
                   <Text color="#555555">{label}</Text>
 
                   {name === "password" ? (

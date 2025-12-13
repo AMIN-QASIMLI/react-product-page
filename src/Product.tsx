@@ -1,6 +1,5 @@
-import { Flex, Image, Text, Input, Button, Loader } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { Flex, Image, Text, Button, Loader } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
 import { FaMoon, FaPlus, FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { MdSunny } from "react-icons/md";
 import {
@@ -11,9 +10,9 @@ import {
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import Logo from "./assets/logo.svg";
 import { useNavigate } from "react-router";
-import { RadioCard } from "./components/ui/RadioCard";
-import { currs } from "./zustand_store";
 import { useClickAway } from "ahooks";
+import { SellMenu } from "./components/ui/SellMenu";
+import { MassagesBox } from "./components/ui/MassagesBox";
 
 export const Product = () => {
   const { data, isFetching } = useGetProductsQuery(undefined, {
@@ -23,13 +22,8 @@ export const Product = () => {
   const [addToCart] = useAddToCartMutation();
   const sellMenuRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const titleInputRef = useRef<HTMLInputElement>(null);
-  const imgInputRef = useRef<HTMLInputElement>(null);
-  const priceInputRef = useRef<HTMLInputElement>(null);
-  const descriptionInputRef = useRef<HTMLInputElement>(null);
-  const [selected, setSelected] = useState(currs[0]);
   const navigate = useNavigate();
-  const productId = window.location.toString().split("/").pop();
+  const productId: number = Number(window.location.toString().split("/").pop());
 
   useClickAway(() => {
     sellMenuRef.current!.style.display = "none";
@@ -48,35 +42,6 @@ export const Product = () => {
       await deleteProduct(id).unwrap();
     } catch (err) {
       console.error("Error while delete:", err);
-    }
-  };
-
-  const handleSellButtonClicked = async () => {
-    if (
-      imgInputRef.current &&
-      descriptionInputRef.current &&
-      titleInputRef.current &&
-      priceInputRef.current &&
-      selected
-    ) {
-      const file = imgInputRef.current.files?.[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append("title", titleInputRef.current.value);
-        formData.append("price", priceInputRef.current.value);
-        formData.append("description", descriptionInputRef.current.value);
-        formData.append("image", file);
-        formData.append("isDeletable", "true");
-        formData.append("curr", selected);
-
-        try {
-          await axios.post("http://localhost:3001/products", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-        } catch (err) {
-          console.error("Add product error:", err);
-        }
-      }
     }
   };
 
@@ -151,59 +116,7 @@ export const Product = () => {
             </Flex>
           </Flex>
         </Flex>
-        <Flex
-          p={4}
-          gap={4}
-          flexDirection={"column"}
-          ref={sellMenuRef}
-          display={"none"}
-        >
-          <Flex gap={2} flexDirection={"column"}>
-            <Text>Tittle :</Text>
-            <Input
-              placeholder="Please write a tittle..."
-              ref={titleInputRef}
-            ></Input>
-          </Flex>
-          <Flex gap={2} flexDirection={"column"}>
-            <Text>Add a image :</Text>
-            <Input type="file" p={2} ref={imgInputRef}></Input>
-          </Flex>
-          <Flex gap={2} flexDirection={"column"}>
-            <Text>Add a Price :</Text>
-            <Input
-              p={2}
-              ref={priceInputRef}
-              placeholder="Please add a price..."
-              type="number"
-            ></Input>
-          </Flex>
-          <Flex gap={2} flexDirection={"column"}>
-            <Text>Add a Currency :</Text>
-            <Flex gap={4} p={2} maxW={"100vw"} overflowX={"auto"}>
-              {currs.map((c, i) => (
-                <RadioCard
-                  key={i}
-                  value={c}
-                  isChecked={selected === c}
-                  onChange={setSelected}
-                >
-                  {c}
-                </RadioCard>
-              ))}
-            </Flex>
-          </Flex>
-          <Flex gap={2} flexDirection={"column"}>
-            <Text>Please write a description :</Text>
-            <Input
-              placeholder="Please write a description..."
-              ref={descriptionInputRef}
-            ></Input>
-          </Flex>
-          <Flex p={2}>
-            <Button onClick={handleSellButtonClicked}>Sell!</Button>
-          </Flex>
-        </Flex>
+        <SellMenu innerRef={sellMenuRef} />
       </header>
       <Flex
         wrap={"wrap"}
@@ -220,35 +133,40 @@ export const Product = () => {
           <Loader />
         ) : (
           data
-            ?.filter((product) => product.id == productId)
-            .map((product, i) => (
+            ?.filter((product) => product.id === productId)
+            .map((product) => (
               <Flex
+                p={2}
                 borderRadius={"md"}
                 backgroundColor={"#1E90FF"}
-                p={16}
                 grow={1}
-                key={i}
+                key={product.id}
+                wrap={"wrap"}
+                direction={"column"}
               >
-                <Image src={product.image} />
-                <Flex direction={"column"} gap={4} p={4}>
-                  <Text fontSize={"32px"}>{product.title}</Text>
-                  <Text fontSize={"24px"}>
-                    {product.price}
-                    {product.curr}
-                  </Text>
-                  <Text>{product.description}</Text>
-                  {product.isDeletable === true ? (
-                    <Button onClick={() => handleDeleteButton(product.id!)}>
-                      Delete!
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handleAddToCartButtonClicked(product)}
-                    >
-                      Add to cart!
-                    </Button>
-                  )}
+                <Flex p={16} grow={1}>
+                  <Image src={product.image} />
+                  <Flex direction={"column"} gap={4} p={4}>
+                    <Text fontSize={"32px"}>{product.title}</Text>
+                    <Text fontSize={"24px"}>
+                      {product.price}
+                      {product.curr}
+                    </Text>
+                    <Text>{product.description}</Text>
+                    {product.isDeletable === true ? (
+                      <Button onClick={() => handleDeleteButton(product.id!)}>
+                        Delete!
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => handleAddToCartButtonClicked(product)}
+                      >
+                        Add to cart!
+                      </Button>
+                    )}
+                  </Flex>
                 </Flex>
+                <MassagesBox msgs={product.msgs} />
               </Flex>
             ))
         )}

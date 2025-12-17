@@ -22,12 +22,15 @@ export const TestApi = () => {
             >
               Get Products
             </Button>
-            {dataLazy?.map((post) => (
+            {dataLazy?.map((product) => (
               <Flex direction="column" border="1px solid red">
-                <Text>{post.id}</Text>
-                <Text>{post.title}</Text>
-                <Text>{post.userId}</Text>
-                <Text>{post.body}</Text>
+                <Text>{product.id}</Text>
+                <Text>{product.title}</Text>
+                <Text>{product.description}</Text>
+                <Text>
+                  {product.price}
+                  {product.curr}
+                </Text>
               </Flex>
             ))}
           </>
@@ -38,12 +41,15 @@ export const TestApi = () => {
         {isFetching ? (
           <Loader />
         ) : (
-          data?.map((post) => (
+          data?.map((product) => (
             <Flex direction="column" border="1px solid red">
-              <Text>{post.id}</Text>
-              <Text>{post.title}</Text>
-              <Text>{post.userId}</Text>
-              <Text>{post.body}</Text>
+              <Text>{product.id}</Text>
+              <Text>{product.title}</Text>
+              <Text>{product.description}</Text>
+              <Text>
+                {product.price}
+                {product.curr}
+              </Text>
             </Flex>
           ))
         )}

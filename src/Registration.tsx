@@ -248,6 +248,7 @@ export const Registration = () => {
         w="100%"
         justifyContent="center"
         alignItems="center"
+        className="image-flex"
       >
         <Flex position={"relative"}>
           {darkMode ? (

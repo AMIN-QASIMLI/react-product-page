@@ -8,6 +8,14 @@ body {
   color: #0e0d0d;
 }
 
+body .image-flex{
+  background-color: #ffffff;
+}
+
+body.dark-mode .image-flex{
+  background-color: #181818;
+}
+
 header {
   background-color: #cccbcb;
 }

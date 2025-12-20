@@ -91,7 +91,7 @@ export const Login = () => {
   };
 
   return (
-    <Flex minH="100vh" justifyContent={"center"} alignItems="center">
+    <Flex minH="100vh" bg-color={"#ffffff"} justifyContent={"center"} alignItems="center">
       <Flex
         maxW={{ base: "100%", xl: "825px" }}
         height={"100vh"}

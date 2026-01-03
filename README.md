@@ -110,4 +110,5 @@ This project is licensed under the MIT License.
 Amin
 Front-End Developer
 GitHub: https://github.com/amin-qasimli
-⭐ If you like this project, consider giving it a star!
+
+## ⭐ If you like this project, consider giving it a star!

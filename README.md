@@ -44,7 +44,7 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/amin-qasimli/react-product-page.git
-cd amazon-clone
+cd react-product-page
 
 Install dependencies:
 

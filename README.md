@@ -1,69 +1,113 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🛒 Amazon-Style E-Commerce Web App
 
-Currently, two official plugins are available:
+## You can look this project in netlify by this link -> 
+```
+https://react-product-page-by-amin.netlify.app
+```
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A modern Amazon-like e-commerce web application built with **React**, **Zustand**, **RTK Query**, **Axios**, and **Chakra UI**. The project demonstrates scalable state management, API integration, and a responsive, accessible UI.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Product listing & details pages
+- Search and category filtering
+- Shopping cart with persistent state (Zustand)
+- Authentication-ready architecture
+- API data fetching & caching (RTK Query + Axios)
+- Responsive UI with Chakra UI
+- Loading & error handling states
+- Clean and modular architecture
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🧰 Tech Stack
+
+| Technology | Usage |
+|------------|--------|
+| React | UI library |
+| Zustand | Global state management |
+| RTK Query | Server state, caching, and API handling |
+| Axios | HTTP client |
+| Chakra UI | Component library & styling |
+| React Router | Client-side routing |
+
+---
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/amin-qasimli/react-product-page.git
+cd amazon-clone
+
+Install dependencies:
+
+npm install
+
+Start development server:
+
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+🔌 API Configuration
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Create a .env file in the root directory:
 ```
+VITE_API_BASE_URL=https://product-server-v082.onrender.com/
+```
+
+RTK Query uses this base URL to fetch products and user data.
+🗂️ Project Structure
+
+src/
+├── app/                # Redux store and RTK Query setup
+├── api/                # API slices
+├── components/         # Reusable UI components
+├── features/           # Feature-based modules (cart, auth, products)
+├── pages/              # Route pages
+├── store/              # Zustand stores
+├── routes/             # Route definitions
+└── main.jsx            # Entry point
+
+🛍️ Cart State (Zustand Example)
+
+import { create } from "zustand";
+
+export const useCartStore = create((set) => ({
+  cart: [],
+  addToCart: (product) =>
+    set((state) => ({ cart: [...state.cart, product] })),
+  removeFromCart: (id) =>
+    set((state) => ({ cart: state.cart.filter(p => p.id !== id) }))
+}));
+
+🧪 Scripts
+Command	Description
+npm run dev	Start dev server
+npm run build	Build for production
+npm run preview	Preview production build
+🌍 Deployment
+
+You can deploy this project on:
+
+    Vercel
+
+    Netlify
+
+    Cloudflare Pages
+
+📄 License
+
+This project is licensed under the MIT License.
+👨‍💻 Author
+
+Amin
+Front-End Developer
+GitHub: https://github.com/amin-qasimli
+⭐ If you like this project, consider giving it a star!
